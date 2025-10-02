@@ -1,59 +1,58 @@
 import numpy as np
 
-neutrons = 10
-radius = 2
-mfp = 1
-energy = 0
+# setting some inital parameters
+radius = 10
+mfp = 1 # mean free path
+k = 2
+
+# need global variables, since we want to change it inside functions.
+neutrons = 11 # initial neutrons. counts up and down as neutrons appear and go away
+energy = 0 # initial energy. Just a counter for now
+used = 0 # neutrons used up so far.
+
 fiss_prob = 0.1
-scat_prob = 1 - fiss_prob
-x, y, z = 0, 0, 0 # start position
+scat_prob = 1 - fiss_prob # currently unused
 
-
-# function to get random unit vector.
-# function to test what happens to neutron after moving
-# function to iterate over neutrons.
+x, y, z = 0, 0, 0 # starting position of first neutron
 
 def move(x, y, z):
     random_vector = np.random.rand(3) # get 3 random values for xyz
-    unit_vector = random_vector / np.linalg.norm(random_vector) # normalize to 1
+    unit_vector = random_vector / np.linalg.norm(random_vector) # normalize to 1 before scaling by mfp
 
-    # add random_vector to current position
-    # print(x, y, z, unit_vector)
+    # add displacement to current position
     x += unit_vector[0] * mfp
     y += unit_vector[1] * mfp
     z += unit_vector[2] * mfp
 
-    return x, y, z # return new position
+    # return new position
+    return x, y, z
 
 def test_neutron(x, y, z):
-    # allow this function to modify the global counters
-    global neutrons, energy
-    distance_from_center = np.sqrt(x**2 + y**2 + z**2) # r in spherical coordinates
-    # print("at distance", distance_from_center)
-    if distance_from_center > radius: # if outside bomb
-        return 25
-    elif np.random.rand() < fiss_prob: # if inside bomb and fisses
-        return 1
-    else: # if inside bomb and not fisses
-        return -1
+    rnd_num = np.random.rand()
+    global neutrons, energy, used # allow this function to modify these
+    distance_from_center = np.sqrt(x**2 + y**2 + z**2) # r in spherical coordinates. Maybe a faster way to do this using numpy array?
+    if distance_from_center > radius: # if outside bomb, remove neutron and reset next one
+        print('at distance')
+        neutrons -= 1
+        x, y, z = 0., 0., 0.
+        used += 1 # update the used count
+        return True
+    elif rnd_num < fiss_prob: # if inside bomb and fisses
+        print('at fission')
+        energy = energy + 1
+        neutrons += k - 1 # one neutron got used up, but k new ones are created
+        x, y, z = 0, 0, 0
+        used += 1 # update the used count
+        return True
+    # else: # if inside bomb and no fission happens, just go again (scattering)
+    #     pass
+    return False
 
-# now, we can start to run the program
+# running the program
+print("running old method")
 while neutrons:
-    print('neutrons:', neutrons, 'energy:', energy)
-    # move to a new position, then test the neutron.
+    # move to a new position, then test for fission.
     x, y, z = move(x, y, z)
-    result = test_neutron(x, y, z)
-    if result == 25:
-        neutrons -= 1 # neutron is gone
-        x, y, z = 0, 0, 0 # reset position for next neutron
-        print('escaped')
-        pass
-    elif result == 1:
-        energy += 1 # add to energy count
-        neutrons -= 1 # it gets used up
-        neutrons += 2 # add 2 new neutrons. this is k value
-        x, y, z = 0, 0, 0 # reset position for next neutron
-        print('fissioned')
-        pass # need to restart the loop
-    else:
-        print('scattered')
+    if (test_neutron(x, y, z)): x, y, z = 0, 0, 0
+print("energy:", energy)
+print("used:", used)
