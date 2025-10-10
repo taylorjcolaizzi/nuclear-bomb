@@ -28,3 +28,9 @@ Assuming k = 2,
 Can you find a value for k by looking at the variations of multiple single "seed" neutron calculations?
 
 Can you estimate the fraction of U-235 that has fissioned when your device has produced energy equivalent to 15 kTons of TNT?
+
+IDEAS FOR HOW TO MAKE THIS WORK!!!
+
+You only need just a couple of interactions: neutron leaves sphere by scattering, neutron stays in sphere by scattering, neutron fissions with U-235, neutron gets absorbed. ~ need to figure out the energy after each interaction, or you won't be able tot get it realistic.
+
+Pratik uses a class in python for Neutron(), which holds the generation, position, energy, interactions, and position. (I'm currently doing this with functions and stored variables in lists, not with classes.)
