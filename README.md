@@ -6,7 +6,7 @@ How it works
 
 Simple version
 
-Make counter for neutrons, for energy. Define size of sphere, mean free path, cross-section/probability. 
+Make counter for neutrons, for energy. Define size of sphere, mean free path, cross-section/probability. This is what I have in my `tester.py` file. Works okay!
 
 Resources to look at 
 Graph for cross section for U-235 -> has the graph on Wikipedia

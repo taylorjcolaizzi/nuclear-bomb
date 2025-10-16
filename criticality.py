@@ -34,7 +34,7 @@ def neutron_inside(x_final, y_final, z_final, bomb_radius):
     False : neutron has escaped the bomb.
     """
 
-    distance_from_center = np.sqrt(x_final**2, y_final**2, z_final**2)
+    distance_from_center = np.sqrt(x_final**2 + y_final**2 + z_final**2)
     if distance_from_center > bomb_radius:
         return False # neutron left the bomb
     else:
@@ -66,7 +66,7 @@ def test_fission(fiss_prob):
 # initial values
 cross_section = 0.1
 mean_free_path = 1
-bomb_radius = 4
+bomb_radius = .1
 initial_neutrons = 10
 
 # we gotta store the neutrons in a data structure like lists. Make the position and mean free path as lists.
@@ -74,7 +74,10 @@ current_generation = [] # place to store the neutrons' info
 for n in range(initial_neutrons):
     current_generation.append([0, 0, 0, mean_free_path])
 
+next_gen = 1
+
 for n, neutron in enumerate(current_generation):
     current_generation[n] = [move_neutron(*neutron)] # * operator in python will "unpack" the list into its elements!
-    # if neutron_inside
-print(current_generation)
+    next_gen += 1 if neutron_inside(neutron[0], neutron[0], neutron[0], bomb_radius) else 0
+print(len(current_generation))
+print(next_gen)
