@@ -1,6 +1,7 @@
 # final project code for nuclear physics 1 with Dr. Cates
 
 import mylib
+import numpy as np
 
 # example usage:
 mylib.k_number()
@@ -23,4 +24,10 @@ time_step = 10 * 10**(-9)
 
 time, S_values, I_values, R_values = mylib.euler_real_bomb_solver(initial_state, beta_value, gamma_value, time_span, time_step)
 
-print(time, S_values, I_values, R_values)
+# print(time, S_values, I_values, R_values)
+
+t, G, E = mylib.euler_chain_solver([100*100, 0, 0, 0, 0], 0, .1 / time_step, .01 / time_step, 2, time_span, time_step)
+
+for i in range(100):
+    print(G[i], E[i])
+    print(sum(G[i]), E[i])

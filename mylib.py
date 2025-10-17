@@ -60,7 +60,6 @@ def bomb_test(time, delta_time, generations, initial_neutrons, fission_rate, eje
     
     return neutron_storage
 
-@njit
 def real_bomb_odes(state, fission_rate, ejection_rate):
     G1, G2, E = state
     dG1dt = -(fission_rate + ejection_rate) * G1
@@ -68,7 +67,6 @@ def real_bomb_odes(state, fission_rate, ejection_rate):
     dEdt = ejection_rate * (G1 + G2)
     return np.array([dG1dt, dG2dt, dEdt])
 
-# @njit
 def euler_real_bomb_solver(initial_conditions, fission_rate, ejection_rate, total_time, dt):
     G1i, G2i, Ei = initial_conditions
     t_start = 0.0
@@ -92,3 +90,53 @@ def euler_real_bomb_solver(initial_conditions, fission_rate, ejection_rate, tota
         E[i + 1] = E[i] + dt * derivatives[2]
 
     return t, G1, G2, E
+
+
+def chain_odes(state, fission_rate, ejection_rate, k):
+    """
+    state: array of length N+1 -> [G1, G2, ..., GN, E]
+    alpha: transition rate between compartments
+    beta: loss rate from each Gi into E
+    k: number of neutrons produced per fission
+    """
+    N = len(state) - 1
+    G = state[:N] # stands for generations
+    E = state[-1] # stands for exited neutrons
+
+    dG = np.empty(N, dtype=float)
+
+    # G1
+    dG[0] = -(fission_rate + ejection_rate) * G[0]
+
+    # G2..GN
+    for i in range(1, N):
+        dG[i] = fission_rate * k * G[i - 1] - (fission_rate + ejection_rate) * G[i]
+
+    # E
+    dE = ejection_rate * np.sum(G)
+
+    return np.concatenate([dG, [dE]])
+
+def euler_chain_solver(initial_conditions_minus_E, initial_conditions_only_E, fission_rate, ejection_rate, k, total_time, dt):
+    """
+    G0: array-like length N (initial values for G1..GN)
+    E0: float (initial E)
+    returns: t (T,), G (T,N), E (T,)
+    """
+    initial_conditions = np.asarray(initial_conditions_minus_E, dtype=float)
+    N = len(initial_conditions)
+
+    t = np.arange(0.0, total_time + dt, dt)
+    T = len(t)
+
+    Y = np.zeros((T, N + 1), dtype=float)
+    Y[0, :N] = initial_conditions
+    Y[0, -1] = initial_conditions_only_E
+
+    for i in range(T - 1):
+        dY = chain_odes(Y[i], fission_rate, ejection_rate, k)
+        Y[i + 1] = Y[i] + dt * dY
+
+    G = Y[:, :N]
+    E = Y[:, -1]
+    return t, G, E
