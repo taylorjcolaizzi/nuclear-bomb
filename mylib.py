@@ -48,6 +48,28 @@ def mc_integrator3(N, radius, delta_size):
     return probability, count
 
 @njit
+def calculate_ejection_probabilities(radii, mean_step):
+    """
+    Calculates ejection probabilities using the average of 5 runs of mc_integrator3.
+    Parameter :
+    radii: list of radii to be tested
+    mean_step: average length of neutron travel
+    Returns :
+    ejection_probabilities: a list of probabilities matching the radii inputted
+    """
+    ejection_probabilities = []
+    for r in radii:
+        print('testing r:', r)
+        current_probability = []
+        for i in range(5):
+            probability, outside = mc_integrator3(1000*1000, r, mean_step)
+            current_probability.append(probability)
+        average_probability = sum(current_probability) / len(current_probability)
+        ejection_probabilities.append(average_probability)
+    
+    return ejection_probabilities
+
+@njit
 def bomb_test(time, delta_time, generations, initial_neutrons, fission_rate, ejection_rate):
     neutron_storage = [0.0 for i in range(generations)]
     neutron_storage[0] = initial_neutrons
@@ -92,12 +114,11 @@ def euler_real_bomb_solver(initial_conditions, fission_rate, ejection_rate, tota
     return t, G1, G2, E
 
 
-def chain_odes(state, fission_rate, ejection_rate, k):
+def chain_odes(state, fission_rate, ejection_rate):
     """
     state: array of length N+1 -> [G1, G2, ..., GN, E]
-    alpha: transition rate between compartments
-    beta: loss rate from each Gi into E
-    k: number of neutrons produced per fission
+    fission_rate: transition rate for generations
+    ejection_rate: loss rate from each Gi into E
     """
     N = len(state) - 1
     G = state[:N] # stands for generations
@@ -110,14 +131,14 @@ def chain_odes(state, fission_rate, ejection_rate, k):
 
     # G2..GN
     for i in range(1, N):
-        dG[i] = fission_rate * k * G[i - 1] - (fission_rate + ejection_rate) * G[i]
+        dG[i] = fission_rate * k_number() * G[i - 1] - (fission_rate + ejection_rate) * G[i]
 
     # E
     dE = ejection_rate * np.sum(G)
 
     return np.concatenate([dG, [dE]])
 
-def euler_chain_solver(initial_conditions_minus_E, initial_conditions_only_E, fission_rate, ejection_rate, k, total_time, dt):
+def euler_chain_solver(initial_conditions_minus_E, initial_conditions_only_E, fission_prob, ejection_prob, total_time, dt):
     """
     G0: array-like length N (initial values for G1..GN)
     E0: float (initial E)
@@ -133,8 +154,11 @@ def euler_chain_solver(initial_conditions_minus_E, initial_conditions_only_E, fi
     Y[0, :N] = initial_conditions
     Y[0, -1] = initial_conditions_only_E
 
+    fission_rate = fission_prob / dt
+    ejection_rate = ejection_prob / dt
+
     for i in range(T - 1):
-        dY = chain_odes(Y[i], fission_rate, ejection_rate, k)
+        dY = chain_odes(Y[i], fission_rate, ejection_rate)
         Y[i + 1] = Y[i] + dt * dY
 
     G = Y[:, :N]
