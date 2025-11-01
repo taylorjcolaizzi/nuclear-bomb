@@ -2,12 +2,13 @@
 # My method of solving was ODEs and numerical solutions.
 
 # import necessary modules
-import tester_v2 # I made this!
+import library # I made this!
 import numpy as np
 import matplotlib.pyplot as plt
 import math
 
-# This model depends primarily on the size of the bomb. This in turn determines the rate at which neutrons leave the spherical bomb.
+# This model depends primarily on the size of the bomb. 
+# This in turn determines the rate at which neutrons leave the spherical bomb.
 
 # Find ejection probabilities based on radius and mfp
 radii_to_test = [10, 15, 20, 25, 30]
@@ -18,9 +19,12 @@ mean_free_path = -1/(uranium_cross_section * uranium_density) * math.log(1/2)
 # print(mean_free_path)
 
 
-fission_probability = math.exp(-uranium_cross_section * uranium_density * mean_free_path)
+fission_probability = math.exp(
+    -uranium_cross_section * uranium_density * mean_free_path
+    )
 # print(fission_probability)
-probability_to_eject = tester_v2.calculate_ejection_probabilities(radii_to_test, mean_free_path)
+probability_to_eject = library.calculate_ejection_probabilities(radii_to_test, 
+                                                                mean_free_path)
 
 print('radii', radii_to_test)
 print('fission probability', fission_probability)
@@ -41,7 +45,12 @@ for i in range(n_generations - 1): # make room for more generations if needed.
 # now test!
 for rad, prob in enumerate(probability_to_eject):
     test_state = initial_state # just to keep a backup.
-    time, Generations, Exit = tester_v2.euler_chain_solver(test_state, 0, fission_probability, prob, time_span, time_step)
+    time, Generations, Exit = library.euler_chain_solver(test_state, 
+                                                         0, 
+                                                         fission_probability, 
+                                                         prob, 
+                                                         time_span, 
+                                                         time_step)
     old_list = []
     older_list = []
     oldest_list = []
