@@ -2,7 +2,7 @@ import numpy as np
 import math
 from numba import njit
 
-@njit
+# @njit
 def k_number():
     """
     Given that fission occured, determines number of product neutrons.
@@ -10,7 +10,7 @@ def k_number():
     Returns :
     int: random int between 2 and 3
     """
-    return round(np.random.rand() * 2 + 1)
+    return int(np.random.choice((2,3)))
 
 @njit(fastmath = True, cache = True)
 def mc_integrator3(N, radius, delta_size):
@@ -25,8 +25,8 @@ def mc_integrator3(N, radius, delta_size):
     """
     r2 = radius * radius
 
-    # SOLID_ANGLE = 4 * np.pi
-    # SPHERE_VOLUME = 4/3 * np.pi * radius ** 3
+    SOLID_ANGLE = 4 * np.pi
+    SPHERE_VOLUME = 4/3 * np.pi * radius ** 3
     
     count = 0
 
@@ -45,8 +45,8 @@ def mc_integrator3(N, radius, delta_size):
         if (new_position * new_position).sum() > r2:
             count += 1
 
-        # probability = count / (N * SOLID_ANGLE * SPHERE_VOLUME)
-        probability = count / N
+        probability = count / (N * SOLID_ANGLE * SPHERE_VOLUME)
+        # probability = count / N
 
     return probability, count
 
