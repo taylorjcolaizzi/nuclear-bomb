@@ -18,9 +18,19 @@ Here, the rate of change of each population depends on interactions with the oth
 
 ADD IMAGE OF sir MODEL HERE???
 
-
+MAYBE EXPLAIN THE PICTURE HERE??? Talk a lot about how you see the $I$ population grow super fast after interacting with the $S$ group for only a short time!
 
 ## How it works
+
+I set out to model the nuclear bomb with an adapted version of the SIR model. To do so, I made the following assumptions:
+- The fission centers $^{235}U$ are the "susceptible" population $S$ because they get used up as they interact with neutrons.
+- Initial free neutrons from the neutron source are in the $I$ population, since they can "infect" a fission center and make more neutrons.
+- Each fission generates more neutrons, which add to the $I$ population and subtracts fission centers from the $S$ population.
+- As neutrons scatter too far and exit the sphere, the $I$ population decreases and 
+
+CONSIDER CHANIGNG THE MODEL TO JUST HAVE THESE POPULATIONS, NOT DO GENERATIONS. DONT FORGET TO ADD IN THE N TIMES FISSION TERMS. NEED DATA ON NUMBER OF FISSION CENTERS IN THE BOMB. IF YOU CHANGE THE MODEL, YOU NEED TO REFLECT THAT IN THE CODING!!!
+
+## Questions
 
 Resources to look at 
 Graph for cross section for U-235 -> has the graph on Wikipedia
