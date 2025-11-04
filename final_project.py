@@ -10,7 +10,7 @@ import math
 # This in turn determines the rate at which neutrons leave the spherical bomb.
 
 # Find ejection probabilities based on radius and mfp
-radii_to_test = [i for i in range(1,3)] # list generation
+radii_to_test = [i for i in range(1,5)] # list generation
 uranium_density = 4.8 * (10**(22)) # 1/cm^3
 uranium_cross_section = 1.2 * (10**(-24)) # cm^2
 

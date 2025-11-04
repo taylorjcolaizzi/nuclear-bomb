@@ -46,7 +46,7 @@ def mc_integrator3(N, radius, delta_size):
             count += 1
 
         probability = count / (N * SOLID_ANGLE * SPHERE_VOLUME)
-        # probability = count / N
+        # need to divide by all the length dimensions integrated over!
 
     return probability, count
 
@@ -100,12 +100,11 @@ def bomb_test(
     return neutron_storage
 
 def real_bomb_odes(state, fission_rate, ejection_rate):
-    G1, G2, E = state
-    dG1dt = -(fission_rate + ejection_rate) * G1
-    dG2dt = ( (fission_rate * k_number()) * G1 - 
-             (fission_rate + ejection_rate) * G2)
-    dEdt = ejection_rate * (G1 + G2)
-    return np.array([dG1dt, dG2dt, dEdt])
+    S, I, R = state
+    dSdt = -(fission_rate) * S * I
+    dIdt = (fission_rate * k_number()) * S * I - (ejection_rate) * I
+    dRdt = ejection_rate * (I)
+    return np.array([dSdt, dIdt, dRdt])
 
 def euler_real_bomb_solver(initial_conditions, 
                            fission_rate, 

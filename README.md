@@ -26,7 +26,9 @@ I set out to model the nuclear bomb with an adapted version of the SIR model. To
 - The fission centers $^{235}U$ are the "susceptible" population $S$ because they get used up as they interact with neutrons.
 - Initial free neutrons from the neutron source are in the $I$ population, since they can "infect" a fission center and make more neutrons.
 - Each fission generates more neutrons, which add to the $I$ population and subtracts fission centers from the $S$ population.
-- As neutrons scatter too far and exit the sphere, the $I$ population decreases and 
+- As neutrons scatter too far and exit the sphere, they leave the $I$ population and enter the $R$ population of "removed neutrons".
+
+In previous iterations, I used to track each generation of neutron separately; however, the simulation didn't seem to be working as intended. Now, I just lump all the neutrons in together as a large sum that I then evaluate.
 
 CONSIDER CHANIGNG THE MODEL TO JUST HAVE THESE POPULATIONS, NOT DO GENERATIONS. DONT FORGET TO ADD IN THE N TIMES FISSION TERMS. NEED DATA ON NUMBER OF FISSION CENTERS IN THE BOMB. IF YOU CHANGE THE MODEL, YOU NEED TO REFLECT THAT IN THE CODING!!!
 
