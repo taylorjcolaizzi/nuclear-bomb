@@ -22,11 +22,14 @@ MAYBE EXPLAIN THE PICTURE HERE??? Talk a lot about how you see the $I$ populatio
 
 ## How it works
 
-I set out to model the nuclear bomb with an adapted version of the SIR model. To do so, I made the following assumptions:
+I built this program to run in 2 ways. The first uses the basic SIR model described above. The second uses a more complicated model with room to change the number of neutron generations.
+
+For the first more basic model, I set out to model the nuclear bomb by adapting the SIR model. To do so, I made the following assumptions:
 - The fission centers $^{235}U$ are the "susceptible" population $S$ because they get used up as they interact with neutrons.
-- Initial free neutrons from the neutron source are in the $I$ population, since they can "infect" a fission center and make more neutrons.
-- Each fission generates more neutrons, which add to the $I$ population and subtracts fission centers from the $S$ population.
+- Initial free neutrons from the neutron source are in the $I$ population, since they can "infect" a fission center, converting it to energy and even more neutrons.
+- Each fission adds more neutrons to $I$ and subtracts fission centers from $S$.
 - As neutrons scatter too far and exit the sphere, they leave the $I$ population and enter the $R$ population of "removed neutrons".
+- Finally, there's a fourth population called $P$, which is just tallying the number of fissions produced.
 
 In previous iterations, I used to track each generation of neutron separately; however, the simulation didn't seem to be working as intended. Now, I just lump all the neutrons in together as a large sum that I then evaluate.
 
@@ -64,3 +67,6 @@ Pratik uses a class in python for Neutron(), which holds the generation, positio
 ## References
 
 - SIR Model: https://pmc.ncbi.nlm.nih.gov/articles/PMC8993010/
+
+- U used in bomb: https://thebulletin.org/2015/02/the-weight-of-a-butterfly/
+
