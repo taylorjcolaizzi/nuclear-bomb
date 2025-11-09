@@ -75,43 +75,67 @@ def calculate_ejection_probabilities(radii, mean_step):
     
     return ejection_probabilities
 
+# you can forget this function!
+@njit
+def bomb_test(
+    time,
+    delta_time,
+    generations,
+    initial_neutrons,
+    fission_rate,
+    ejection_rate
+    ):
+    neutron_storage = [0.0 for i in range(generations)]
+    neutron_storage[0] = initial_neutrons
+
+    for t in range(0, time, delta_time):
+        neutron_storage[-1] = (neutron_storage[-1] + 
+                               ejection_rate * sum(neutron_storage[:-1]))
+        for i in range(generations - 1, 0, -1):
+            neutron_storage[i] = (neutron_storage[i] + 
+                                  neutron_storage[i - 1] * fission_rate * k_number() - 
+                                  neutron_storage[i] * ejection_rate - 
+                                  neutron_storage[i] * fission_rate)
+        neutron_storage[0] = (neutron_storage[0] - 
+                              neutron_storage[0] * ejection_rate - 
+                              neutron_storage[0] * fission_rate)
+    
+    return neutron_storage
+
 def real_bomb_odes(state, fission_rate, ejection_rate):
     S, I, R, P = state
     dSdt = -(fission_rate) * S * I
     dIdt = (fission_rate * k_number()) * S * I - (ejection_rate) * I
     dRdt = ejection_rate * (I)
-    dPdt = fission_rate * S * I #counting the fissions, not neutrons produced!
-    return np.array([dSdt, dIdt, dRdt, dPdt])
+    return np.array([dSdt, dIdt, dRdt])
 
 def euler_real_bomb_solver(initial_conditions, 
                            fission_rate, 
                            ejection_rate, 
                            total_time, 
                            dt):
-    Si, Ii, Ri, Pi = initial_conditions
+    G1i, G2i, Ei = initial_conditions
     t_start = 0.0
     t_final = total_time
 
     t = np.arange(t_start, t_final + dt, dt)
     num_steps = len(t)
 
-    S = np.zeros(num_steps)
-    I = np.zeros(num_steps)
-    R = np.zeros(num_steps)
-    P = np.zeros(num_steps)
+    G1 = np.zeros(num_steps)
+    G2 = np.zeros(num_steps)
+    E = np.zeros(num_steps)
 
-    S[0], I[0], R[0], P[0] = Si, Ri, Ii, Pi
+    G1[0], G2[0], E[0] = G1i, G2i, Ei
 
     for i in range(num_steps - 1):
-        current_state = np.array([S[i], R[i], I[i], P[i]])
+        current_state = np.array([G1[i], G2[i], E[i]])
         derivatives = real_bomb_odes(current_state, fission_rate, ejection_rate)
 
-        S[i + 1] = S[i] + dt * derivatives[0]
-        R[i + 1] = R[i] + dt * derivatives[1]
-        I[i + 1] = I[i] + dt * derivatives[2]
-        P[i + 1] = P[i] + dt * derivatives[3]
+        G1[i + 1] = G1[i] + dt * derivatives[0]
+        G2[i + 1] = G2[i] + dt * derivatives[1]
+        E[i + 1] = E[i] + dt * derivatives[2]
 
-    return t, S, R, I, P
+    return t, G1, G2, E
 
 
 def chain_odes(state, fission_rate, ejection_rate):

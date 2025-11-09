@@ -2,7 +2,6 @@
 # My method of solving was ODEs and numerical solutions.
 
 import library # I made this!
-import numpy as np
 import matplotlib.pyplot as plt
 import math
 
@@ -10,10 +9,11 @@ import math
 # This in turn determines the rate at which neutrons leave the spherical bomb.
 
 # Find ejection probabilities based on radius and mfp
-radii_to_test = [i for i in range(1,5)] # list generation
+radii_to_test = [i for i in range(1,51, 5)] # list generation
 uranium_density = 4.8 * (10**(22)) # 1/cm^3
 uranium_cross_section = 1.2 * (10**(-24)) # cm^2
 
+# mean_free_path is average length before fission
 mean_free_path = -1/(uranium_cross_section * uranium_density) * math.log(1/2)
 print(mean_free_path)
 
@@ -34,8 +34,8 @@ print('eject probability', probability_to_eject)
 
 time_span = 10**(-6) # 1 µs
 time_step = 10 * (10**(-9)) # 10 ns
-n_neutrons = 1 * 1000 * 1
-n_generations = 20
+n_neutrons = 1 * 1000 * 1 # start with 1000
+n_generations = 20 # go up to 20 generations
 
 initial_state = [n_neutrons] # starter neutrons
 for i in range(n_generations - 1): # make room for more generations if needed.
@@ -73,3 +73,9 @@ for radius, probability in enumerate(probability_to_eject):
     plt.legend()
     plt.tight_layout()
     plt.show()
+
+# now, let's do the same test but with the simple ODE method!
+# uses "real_bomb_odes" function
+
+# using the same method as the SIR_Example, but we have a more complicated state
+
