@@ -72,10 +72,49 @@ for radius, probability in enumerate(probability_to_eject):
     plt.grid()
     plt.legend()
     plt.tight_layout()
-    plt.show()
+    # plt.show()
 
 # now, let's do the same test but with the simple ODE method!
 # uses "real_bomb_odes" function
 
 # using the same method as the SIR_Example, but we have a more complicated state
 
+# Initial conditions
+N = 1000
+I0 = 1
+R0 = 0
+P0 = 0
+S0 = N - I0 - R0 - P0
+
+fission_rate = 0.06
+ejection_rate = 0.1
+
+import numpy
+t = numpy.linspace(0, 160, 160)
+
+y0 = [S0/N, I0/N, R0/N, P0/N]
+
+import scipy
+from library import simple_bomb_odes
+solution = scipy.integrate.odeint(
+    simple_bomb_odes, 
+    y0, 
+    t, 
+    args = (fission_rate, ejection_rate)
+    )
+S, I, R, P = solution.T
+
+plt.figure(figsize=(10,6))
+plt.plot(t, S, label='Fission Centers', linestyle = '-', linewidth = 3)
+plt.plot(t, I, label='Free Neutrons', linestyle = ':', linewidth = 3)
+plt.plot(t, R, label='Escaped', linestyle = '--', linewidth = 3)
+plt.plot(t, P, label='Total Fissions', linestyle = '-.', linewidth = 3)
+plt.xlabel('Time (days)', size = 16)
+plt.ylabel('Fraction of Population', size = 16)
+plt.title('Example SIR Model with beta = 0.3 and gamma = 0.1', size = 24)
+plt.legend(fontsize = 16)
+plt.grid(True)
+plt.tight_layout()
+
+plt.savefig('really_trying.jpg')
+plt.show()

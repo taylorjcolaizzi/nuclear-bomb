@@ -75,44 +75,19 @@ def calculate_ejection_probabilities(radii, mean_step):
     
     return ejection_probabilities
 
-def real_bomb_odes(state, fission_rate, ejection_rate):
-    S, I, R, P = state
+def simple_bomb_odes(y, t, fission_rate, ejection_rate):
+    """
+    simple SIR model for examining the 
+    number of free neutrons over time
+    in the bomb simulation
+    """
+    S, I, R, P = y
     dSdt = -(fission_rate) * S * I
-    dIdt = (fission_rate * k_number()) * S * I - (ejection_rate) * I
+    # dIdt = (fission_rate * k_number()) * S * I - (ejection_rate) * I
+    dIdt = (fission_rate) * 2.4 * S * I - ejection_rate * I
     dRdt = ejection_rate * (I)
     dPdt = fission_rate * S * I #counting the fissions, not neutrons produced!
-    return np.array([dSdt, dIdt, dRdt, dPdt])
-
-def euler_real_bomb_solver(initial_conditions, 
-                           fission_rate, 
-                           ejection_rate, 
-                           total_time, 
-                           dt):
-    Si, Ii, Ri, Pi = initial_conditions
-    t_start = 0.0
-    t_final = total_time
-
-    t = np.arange(t_start, t_final + dt, dt)
-    num_steps = len(t)
-
-    S = np.zeros(num_steps)
-    I = np.zeros(num_steps)
-    R = np.zeros(num_steps)
-    P = np.zeros(num_steps)
-
-    S[0], I[0], R[0], P[0] = Si, Ri, Ii, Pi
-
-    for i in range(num_steps - 1):
-        current_state = np.array([S[i], R[i], I[i], P[i]])
-        derivatives = real_bomb_odes(current_state, fission_rate, ejection_rate)
-
-        S[i + 1] = S[i] + dt * derivatives[0]
-        R[i + 1] = R[i] + dt * derivatives[1]
-        I[i + 1] = I[i] + dt * derivatives[2]
-        P[i + 1] = P[i] + dt * derivatives[3]
-
-    return t, S, R, I, P
-
+    return [dSdt, dIdt, dRdt, dPdt]
 
 def chain_odes(state, fission_rate, ejection_rate):
     """
