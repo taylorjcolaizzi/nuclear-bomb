@@ -42,4 +42,7 @@ plt.ylabel('Fraction of Population')
 plt.title('SIR Model Simulation')
 plt.legend()
 plt.grid(True)
+plt.tight_layout()
+
+plt.savefig('SIR_example.jpg')
 plt.show()
