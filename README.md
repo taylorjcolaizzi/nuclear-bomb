@@ -6,11 +6,11 @@ Short Description: Supercritical uranium coding project for nuclear physics 1 at
 
 ## Background
 
-When learning modern and nuclear physics in my undergraduate degree, we discussed the exponential decay of unstable nuclei. Although it's impossible to predict when an individual radioactive atom will decay, it's well understood that a large number of atoms of the same unstable isotope will reliably decrease in number at the same exponential decay rate. That is, the number of radioactive atoms at time $t$ follows the following equation:
+When learning modern and nuclear physics in my undergraduate degree, we discussed the exponential decay of unstable nuclei. Although it's impossible to predict when an individual radioactive atom will decay, it's well understood that a large number of atoms of the same unstable isotope will reliably decrease in number at the same exponential decay rate. The number of radioactive atoms at time $t$ follows the following equation:
 $$N(t) = N_0*e^{-\lambda t}$$
-where $N_0$ is the initial population of atoms and $\lambda$ is the decay constant. Interestingly, the statistics of the population is quite predictable; whereas, the statistics of individual nuclei is not so. I proceeded with the supercriticality project under this premise: **if I could describe how the populations of free neutrons and fission centers change over time, I might be able to accurately model a supercritical nuclear chain reaction!**
+where $N_0$ is the initial population of atoms and $\lambda$ is the decay constant. Interestingly, the statistics of the *population* is quite predictable; whereas, the statistics of *individual* nuclei is not so. I proceeded with the supercriticality project under this premise: **if I could describe how the populations of free neutrons and fission centers change over time, I might be able to accurately model a supercritical nuclear chain reaction!**
 
-In my undergraduate computational physics course, we studied the Susceptible, Infected, Recovered (SIR) model of epidemiology. The SIR model attempts to describe the time evolution of a contagious disease as it spreads throughout a population. However, the SIR model is easily adapted to many other problems where different populations interact and their numbers change over time. The simplest SIR model comprises just three ordinary differential equations and tracks how a population of susceptible people $(S)$ become infected patients $(I)$ and eventually recover $(R)$ from their illnesses.
+But what computational models enable us to simulate the evolution of populations over time? In my undergraduate computational physics course, we studied the Susceptible, Infected, Recovered (SIR) model of epidemiology. The SIR model attempts to describe the time evolution of a contagious disease as it spreads throughout a population. However, the SIR model is easily adapted to many other problems where different populations interact and their numbers change over time. The simplest SIR model comprises just three ordinary differential equations and tracks how a population of susceptible people $(S)$ become infected patients $(I)$ and eventually recover $(R)$ from their illnesses.
 $$\frac{dS}{dt}(t) = -\beta S(t)I(t)$$
 $$\frac{dI}{dt}(t) = \beta S(t)I(t) - \gamma I(t)$$
 $$\frac{dR}{dt}(t) = \gamma I(t)$$
@@ -36,6 +36,8 @@ In previous iterations, I used to track each generation of neutron separately; h
 CONSIDER CHANIGNG THE MODEL TO JUST HAVE THESE POPULATIONS, NOT DO GENERATIONS. DONT FORGET TO ADD IN THE N TIMES FISSION TERMS. NEED DATA ON NUMBER OF FISSION CENTERS IN THE BOMB. IF YOU CHANGE THE MODEL, YOU NEED TO REFLECT THAT IN THE CODING!!!
 
 ## Questions
+
+
 
 Resources to look at 
 Graph for cross section for U-235 -> has the graph on Wikipedia

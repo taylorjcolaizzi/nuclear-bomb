@@ -34,9 +34,9 @@ S, I, R = solution.T
 
 # Plot the results
 plt.figure(figsize=(10,6))
-plt.plot(t, S, label='Susceptible', linestyle = '-', linewidth = 4)
-plt.plot(t, I, label='Infected', linestyle = ':', linewidth = 4)
-plt.plot(t, R, label='Recovered', linestyle = '--', linewidth = 4)
+plt.plot(t, S, label='Susceptible', linestyle = '-', linewidth = 3)
+plt.plot(t, I, label='Infected', linestyle = ':', linewidth = 3)
+plt.plot(t, R, label='Recovered', linestyle = '--', linewidth = 3)
 plt.xlabel('Time (days)')
 plt.ylabel('Fraction of Population')
 plt.title('SIR Model Simulation')
