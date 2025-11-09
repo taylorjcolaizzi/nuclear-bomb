@@ -1,9 +1,10 @@
 # final project code for nuclear physics 1 with Dr. Cates
-# My method of solving was ODEs and numerical solutions.
+# My method of solving was ODEs and numerical integration.
 
 import library # I made this!
 import matplotlib.pyplot as plt
 import math
+import scipy
 
 # This model depends primarily on the size of the bomb. 
 # This in turn determines the rate at which neutrons leave the spherical bomb.
@@ -86,18 +87,18 @@ R0 = 0
 P0 = 0
 S0 = N - I0 - R0 - P0
 
-fission_rate = 0.06
-ejection_rate = 0.1
+fission_rate = .5 / (1e-6)
+print(fission_rate)
+ejection_rate = .2 / (1e-6)
 
 import numpy
-t = numpy.linspace(0, 160, 160)
+t = numpy.linspace(0, 10e-6, 101)
+print(t)
 
 y0 = [S0/N, I0/N, R0/N, P0/N]
 
-import scipy
-from library import simple_bomb_odes
 solution = scipy.integrate.odeint(
-    simple_bomb_odes, 
+    library.simple_bomb_odes, 
     y0, 
     t, 
     args = (fission_rate, ejection_rate)
