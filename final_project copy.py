@@ -9,25 +9,30 @@ import scipy
 # This model depends primarily on the size of the bomb. 
 # This in turn determines the rate at which neutrons leave the spherical bomb.
 
-# Find ejection probabilities based on radius and mfp
-radii_to_test = [i for i in range(1,5, 5)] # list generation
-uranium_density = 4.8 * (10**(22)) # 1/cm^3
-uranium_cross_section = 1.2 * (10**(-24)) # cm^2
+# Find ejection probabilities based on radius and mean free path
+radii_to_test = [i for i in range(1,5, 51)] # list generation
 
+URANIUM_DENSITY = 4.8 * (10**(22)) # 1/cm^3
 FISSION_CROSS_SECTION = 1.2 * (10**(-24)) # cm^2 at 1 MeV
 ELASTIC_CROSS_SECTION = 3.6 * (10**(-24)) # cm^2 at 1 MeV
 
 # mean_free_path is average length before fission
-mean_free_path = -1/(uranium_cross_section * uranium_density) * math.log(1/2)
-print(mean_free_path)
+fission_mean_free_path = -1/(FISSION_CROSS_SECTION * URANIUM_DENSITY) * math.log(1/2)
+elastic_mean_free_path = -1/(ELASTIC_CROSS_SECTION * URANIUM_DENSITY) * math.log(1/2)
+print(fission_mean_free_path, elastic_mean_free_path)
 
 fission_probability = math.exp(
-    -uranium_cross_section * uranium_density * mean_free_path
+    -FISSION_CROSS_SECTION * URANIUM_DENSITY * fission_mean_free_path
     )
-print(fission_probability)
+elastic_probability = math.exp(
+    -ELASTIC_CROSS_SECTION * URANIUM_DENSITY * elastic_mean_free_path
+)
+print(fission_probability, elastic_probability)
 
-probability_to_eject = library.calculate_ejection_probabilities(radii_to_test, 
-                                                                mean_free_path)
+probability_to_eject = library.calculate_ejection_probabilities(
+    radii_to_test, 
+    elastic_mean_free_path
+    )
 
 print('radii', radii_to_test)
 print('fission probability', fission_probability)
