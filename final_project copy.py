@@ -13,11 +13,10 @@ import numpy # various linear algebra tools
 # as the default values for 1 MeV neutrons hitting U235
 
 # Find ejection probabilities based on radius and mean free path
-radii_to_test = [i for i in range(1,15)] # list generation
-radii_to_test = numpy.linspace(1, 5, 10)
-volume_to_test = [4/3 * math.pi * r * r * r for r in radii_to_test]
-print(radii_to_test)
-print(volume_to_test)
+radii_to_test = numpy.linspace(1, 4, 2) # it explodes quickly!
+volume_to_test = [4/3 * math.pi * r**3 for r in radii_to_test]
+# print(radii_to_test)
+# print(volume_to_test)
 
 URANIUM_DENSITY = 4.8 * (10**(22)) # 1/cm^3
 FISSION_CROSS_SECTION = 1.2 * (10**(-24)) # cm^2 at 1 MeV
