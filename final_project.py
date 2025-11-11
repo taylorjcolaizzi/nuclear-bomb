@@ -92,7 +92,7 @@ S0 = N - I0 - R0 - P0
 
 fission_rate = - math.log(1 - 0.5) / (10e-9)
 print(fission_rate)
-ejection_rate = - math.log(1 - 0.6) / (10e-9)
+ejection_rate = - math.log(1 - 0.7) / (10e-9)
 
 import numpy
 t = numpy.linspace(0, 1e-6, 101)

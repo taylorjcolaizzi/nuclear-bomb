@@ -45,10 +45,9 @@ def mc_integrator3(N, radius, delta_size):
         if (new_position * new_position).sum() > r2:
             count += 1
 
-        probability = count / (N * SOLID_ANGLE * SPHERE_VOLUME)
-        # probability above gives really high values of k always...
-        # need to divide by all the length dimensions integrated over!
-        # probability = count / N # if you don't divide by dimension
+        # probability = count / (N * SOLID_ANGLE * SPHERE_VOLUME)
+
+        probability = count / N # if you don't divide by dimension
 
     return probability, count
 
